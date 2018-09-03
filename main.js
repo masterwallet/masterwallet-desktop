@@ -8,10 +8,15 @@ const url = require('url')
 
 const options = require('./options');
 const server = require('./server');
+const debug = require('debug');
 
 if (!options.noServer) {
   const { host, port } = options;
   server.listen(port, host);
+}
+
+if (options.debug) {
+  debug.enable('*');
 }
 
 // Keep a global reference of the window object, if you don't, the window will
