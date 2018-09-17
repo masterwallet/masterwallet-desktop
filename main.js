@@ -1,6 +1,6 @@
 const electron = require('electron')
 // Module to control application life.
-const app = electron.app
+const { app, protocol } = electron
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 const path = require('path')
@@ -25,6 +25,16 @@ let mainWindow
 // making config available for the client
 // global.config = configuration; 
 
+function devToolsLog(s) {
+  debug.log(s)
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.executeJavaScript(`console.log("${s}")`)
+  }
+}
+
+// protocol.registerStandardSchemes(['todo2'])
+app.setAsDefaultProtocolClient("todo2")
+
 function createWindow () {
   // Create the browser window.
   const props = options.debug ? {} : { width: 620, height: 800, resizable: false, maximizable: false };
@@ -32,6 +42,19 @@ function createWindow () {
   mainWindow.setMenu(null);
   if (options.debug) mainWindow.openDevTools();
   
+  debug.log("Registering protocol todo2");
+  const res = protocol.registerHttpProtocol("todo2", (req, cb) => {
+    // debug.log("req.url=" + req.url);
+    // const fullUrl = formFullTodoUrl(req.url)
+    devToolsLog('full url to open ' + req.url)
+    // mainWindow.loadURL(fullUrl)
+    cb();
+  }, (err) => {
+    debug.log("ERROR: ", err);
+  })
+  debug.log("registering result=", res);
+
+
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, "public/index.html"),
