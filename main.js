@@ -33,7 +33,7 @@ function devToolsLog(s) {
 }
 
 // protocol.registerStandardSchemes(['todo2'])
-app.setAsDefaultProtocolClient("todo2")
+app.setAsDefaultProtocolClient("wallet")
 
 function createWindow () {
   // Create the browser window.
@@ -42,8 +42,8 @@ function createWindow () {
   mainWindow.setMenu(null);
   if (options.debug) mainWindow.openDevTools();
   
-  debug.log("Registering protocol todo2");
-  const res = protocol.registerHttpProtocol("todo2", (req, cb) => {
+  debug.log("Registering protocol mwallet");
+  const res = protocol.registerHttpProtocol("wallet", (req, cb) => {
     // debug.log("req.url=" + req.url);
     // const fullUrl = formFullTodoUrl(req.url)
     devToolsLog('full url to open ' + req.url)
